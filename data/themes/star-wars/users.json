@@ -1,0 +1,219 @@
+[
+  {
+    "id": 1,
+    "first_name": "Luke",
+    "last_name": "Skywalker",
+    "email": "luke.skywalker@",
+    "profile_photo": "/content/Luke.jpg"
+  },
+  {
+    "id": 2,
+    "first_name": "C-3PO",
+    "last_name": "",
+    "email": "c3po@",
+    "profile_photo": "/content/C-3PO.jpg"
+  },
+  {
+    "id": 3,
+    "first_name": "R2-D2",
+    "last_name": "",
+    "email": "r2d2@",
+    "profile_photo": "/content/R2-D2.jpg"
+  },
+  {
+    "id": 4,
+    "first_name": "Darth",
+    "last_name": "Vader",
+    "email": "darth.vader@",
+    "profile_photo": "/content/Darth.jpg"
+  },
+  {
+    "id": 5,
+    "first_name": "Leia",
+    "last_name": "Organa",
+    "email": "leia.organa@",
+    "profile_photo": "/content/Leia.jpg"
+  },
+  {
+    "id": 6,
+    "first_name": "Owen",
+    "last_name": "Lars",
+    "email": "owen.lars@",
+    "profile_photo": "/content/Owen.jpg"
+  },
+  {
+    "id": 7,
+    "first_name": "Beru",
+    "last_name": "Whitesun",
+    "email": "beru.whitesun@",
+    "profile_photo": "/content/Beru.jpg"
+  },
+  {
+    "id": 8,
+    "first_name": "Obi-Wan",
+    "last_name": "Kenobi",
+    "email": "obiwan.kenobi@",
+    "profile_photo": "/content/Obi-Wan.jpg"
+  },
+  {
+    "id": 9,
+    "first_name": "Anakin",
+    "last_name": "Skywalker",
+    "email": "anakin.skywalker@",
+    "profile_photo": "/content/Anakin.jpg"
+  },
+  {
+    "id": 10,
+    "first_name": "Chewbacca",
+    "last_name": "",
+    "email": "chewbacca@",
+    "profile_photo": "/content/Chewbacca.jpg"
+  },
+  {
+    "id": 11,
+    "first_name": "Han",
+    "last_name": "Solo",
+    "email": "han.solo@",
+    "profile_photo": "/content/Han.jpg"
+  },
+  {
+    "id": 12,
+    "first_name": "Greedo",
+    "last_name": "",
+    "email": "greedo@",
+    "profile_photo": "/content/Greedo.jpg"
+  },
+  {
+    "id": 13,
+    "first_name": "Jabba",
+    "last_name": "Desilijic",
+    "email": "jabba.desilijic@",
+    "profile_photo": "/content/Jabba.jpg"
+  },
+  {
+    "id": 14,
+    "first_name": "Yoda",
+    "last_name": "",
+    "email": "yoda@",
+    "profile_photo": "/content/Yoda.jpg"
+  },
+  {
+    "id": 15,
+    "first_name": "Palpatine",
+    "last_name": "",
+    "email": "palpatine@",
+    "profile_photo": "/content/Palpatine.jpg"
+  },
+  {
+    "id": 16,
+    "first_name": "Boba",
+    "last_name": "Fett",
+    "email": "boba.fett@",
+    "profile_photo": "/content/Boba.jpg"
+  },
+  {
+    "id": 17,
+    "first_name": "Lando",
+    "last_name": "Calrissian",
+    "email": "lando.calrissian@",
+    "profile_photo": "/content/Lando.jpg"
+  },
+  {
+    "id": 18,
+    "first_name": "Ackbar",
+    "last_name": "",
+    "email": "ackbar@",
+    "profile_photo": "/content/Ackbar.jpg"
+  },
+  {
+    "id": 19,
+    "first_name": "Qui-Gon",
+    "last_name": "Jinn",
+    "email": "quigon.jinn@",
+    "profile_photo": "/content/Qui-Gon.jpg"
+  },
+  {
+    "id": 20,
+    "first_name": "Jar Jar",
+    "last_name": "Binks",
+    "email": "jarjar.binks@",
+    "profile_photo": "/content/Jar.jpg"
+  },
+  {
+    "id": 21,
+    "first_name": "Shmi",
+    "last_name": "Skywalker",
+    "email": "shmi.skywalker@",
+    "profile_photo": "/content/Shmi.jpg"
+  },
+  {
+    "id": 22,
+    "first_name": "Darth",
+    "last_name": "Maul",
+    "email": "darth.maul@",
+    "profile_photo": "/content/Darth.jpg"
+  },
+  {
+    "id": 23,
+    "first_name": "Mace",
+    "last_name": "Windu",
+    "email": "mace.windu@",
+    "profile_photo": "/content/Mace.jpg"
+  },
+  {
+    "id": 24,
+    "first_name": "Dooku",
+    "last_name": "",
+    "email": "dooku@",
+    "profile_photo": "/content/Dooku.jpg"
+  },
+  {
+    "id": 25,
+    "first_name": "Jango",
+    "last_name": "Fett",
+    "email": "jango.fett@",
+    "profile_photo": "/content/Jango.jpg"
+  },
+  {
+    "id": 26,
+    "first_name": "Grievous",
+    "last_name": "",
+    "email": "grievous@",
+    "profile_photo": "/content/Grievous.jpg"
+  },
+  {
+    "id": 27,
+    "first_name": "Finn",
+    "last_name": "",
+    "email": "finn@",
+    "profile_photo": "/content/Finn.jpg"
+  },
+  {
+    "id": 28,
+    "first_name": "Rey",
+    "last_name": "",
+    "email": "rey@",
+    "profile_photo": "/content/Rey.jpg"
+  },
+  {
+    "id": 29,
+    "first_name": "Poe",
+    "last_name": "Dameron",
+    "email": "poe.dameron@",
+    "profile_photo": "/content/Poe.jpg"
+  },
+  {
+    "id": 30,
+    "first_name": "BB8",
+    "last_name": "",
+    "email": "bb8@",
+    "profile_photo": "/content/BB8.jpg"
+  },
+  {
+    "id": 31,
+    "first_name": "Padmé",
+    "last_name": "Amidala",
+    "email": "padmé.amidala@",
+    "profile_photo": "/content/Padmé.jpg"
+  }
+]

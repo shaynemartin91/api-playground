@@ -1,109 +1,121 @@
+const fs = require('fs');
+const path = require('path');
 const _ = require('underscore');
 const express = require('express');
-const router = express.Router();
-const ActionSet = require('../actions/ActionSet');
 const inflect = require('i')();
 
-module.exports = config => {  
-  
-  config.plural_model_name = config.plural_model_name || inflect.pluralize(config.model_name);
-  config.proper_model_name = config.proper_model_name || inflect.titleize(config.model_name); 
-  
-  const Actions = require(`../actions/${config.model_name}`);
-  const PostAction = Actions[`${config.proper_model_name}PostAction`];
-  const EditAction = Actions[`${config.proper_model_name}EditAction`];
-  const DeleteAction = Actions[`${config.proper_model_name}DeleteAction`];
-  
-  const default_model = require(`../data/defaults/${config.plural_model_name}.json`);
+const router = express.Router();
 
-  const data_path = theme => `../data/themes/${theme}/${config.plural_model_name}.json`; 
-  
-  const clean_data = (record, new_data) => {
+module.exports = (config) => {
+  const pluralModelName = config.plural_model_name || inflect.pluralize(config.model_name);
+  const properModelName = config.proper_model_name || inflect.titleize(config.model_name);
+  const actionsPath = `../actions/${config.model_name}`;
+
+  // eslint-disable-next-line global-require, import/no-dynamic-require
+  const Actions = require(actionsPath);
+  const PostAction = Actions[`${properModelName}PostAction`];
+  const EditAction = Actions[`${properModelName}EditAction`];
+  const DeleteAction = Actions[`${properModelName}DeleteAction`];
+
+  const defaultModel = JSON.parse(fs.readFileSync(
+    path.join(__dirname, '..', 'data', 'defaults', `${pluralModelName}.json`),
+    'utf8'));
+
+  const dataPath = theme => path.join(__dirname, '..', 'data', 'themes', theme, `${pluralModelName}.json`);
+
+  const cleanData = function cleanData(record, newData) {
     return Object.assign(
-      {}, 
-      default_model,
+      {},
+      defaultModel,
       record,
-      _.pick(new_data, ...Object.keys(default_model))
+      _.pick(newData, ...Object.keys(defaultModel))
     );
   };
 
-  const clean_collection = collection => collection.filter(r => !r.deleted);
+  const cleanCollection = collection => collection.filter(r => !r.deleted);
 
   router.use((req, res, next) => {
-    if(!req.session.actions.hasOwnProperty(config.model_name))
-      req.session.actions[config.model_name] = new ActionSet(config.model_name);
-    
-    req.base_collection = require(data_path(req.session.theme));
-    req.collection = req.session.actions.user.run(req.base_collection);
-    
+    if (!req.session.actions.hasOwnProperty(config.model_name)) {
+      req.createActionSet(config.model_name);
+    }
+
+    req.setValue('base_collection', JSON.parse(fs.readFileSync(dataPath(req.session.theme), 'utf8')));
+    req.setValue('collection', req.session.actions.user.run(req.base_collection));
+
+    req.setValue('updateCollection', (action) => {
+      req.setValue('collection', action.run(req.collection));
+    });
+
     next();
   });
 
   /* GET users listing. */
-  router.get('/', function(req, res, next) {
-    res.json(clean_collection(req.collection));
+  router.get('/', (req, res) => {
+    res.json(cleanCollection(req.collection));
   });
 
-  router.get('/:id', function(req, res, send){
-    const id = parseInt(req.params.id);
-    const record = _.findWhere(req.collection, {id});
+  router.get('/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const record = _.findWhere(req.collection, { id });
 
-    if(record && !record.deleted) 
-      res.json(record)
-    else
+    if (record && !record.deleted) {
+      res.json(record);
+    } else {
       res.status(404).json({
         success: false,
         status: 404,
         message: 'This record does not exist',
         meta: {
-          id
-        }
+          id,
+        },
       });
+    }
   });
 
-  router.post('/', (req, res, next) => {
-    const action = new PostAction(clean_data({}, req.body));
+  router.post('/', (req, res) => {
+    const action = new PostAction(cleanData({}, req.body));
     const validation = action.validate();
 
-    if(!validation.success) {
+    if (!validation.success) {
       res.status(validation.status).json(validation);
     } else {
       req.session.actions.user.add(action);
-      req.collection = action.run(req.collection);
+      req.updateCollection(action);
       res.json(req.collection[req.collection.length - 1]);
     }
   });
 
-  router.put('/:id', (req, res, next) => {
-    const record = _.findWhere(req.collection, {id: parseInt(req.params.id)}) || {};
-    const data = clean_data(record, req.body);
-    const action = new EditAction(Object.assign({}, data, {id: parseInt(req.params.id)}));
-    
+  router.put('/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const record = _.findWhere(req.collection, { id }) || {};
+    const data = cleanData(record, req.body);
+    const action = new EditAction(Object.assign({}, data, { id }));
+
     const validation = action.validate(req.collection);
 
-    if(!validation.success) {
-      res.status(validation.status).json(validation)
-    } else {
-      req.session.actions.user.add(action);
-      req.collection = action.run(req.collection);
-      res.json(_.findWhere(req.collection, {id: parseInt(req.params.id)}));
-    }
-  });
-
-  router.delete('/:id', (req, res, next) => {
-    const action = new DeleteAction(parseInt(req.params.id));
-    const validation = action.validate(req.collection);
-
-    if(!validation.success) {
+    if (!validation.success) {
       res.status(validation.status).json(validation);
     } else {
       req.session.actions.user.add(action);
-      req.collection = action.run(req.collection);
-      res.json(clean_collection(req.collection));
+      req.updateCollection(action);
+      res.json(_.findWhere(req.collection, { id }));
+    }
+  });
+
+  router.delete('/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const action = new DeleteAction(id);
+    const validation = action.validate(req.collection);
+
+    if (!validation.success) {
+      res.status(validation.status).json(validation);
+    } else {
+      req.session.actions.user.add(action);
+      req.updateCollection(action);
+      res.json(cleanCollection(req.collection));
     }
   });
 
 
   return router;
-
 };

@@ -1,4 +1,4 @@
-"use strict";
+
 
 const ActionHelper = require('./ActionHelper');
 
@@ -9,17 +9,17 @@ class NotImplementedError extends Error {
 }
 
 class BaseAction {
-  constructor(data = {}){
+  constructor(data = {}) {
     this.data = data;
     this.ActionHelper = ActionHelper;
   }
 
   validate() {
-    throw new NotImplementedError(this.getType(), `validate`);
+    throw new NotImplementedError(this.getType(), 'validate');
   }
 
   run() {
-    throw new NotImplementedError(this.getType(), `run`);
+    throw new NotImplementedError(this.getType(), 'run');
   }
 
   getType() {
@@ -29,13 +29,10 @@ class BaseAction {
   serialize(stringify = true) {
     const serialized = {
       type: this.getType(),
-      data: this.data
+      data: this.data,
     };
 
-    if(stringify)
-      return JSON.stringify(serialized);
-    else
-      return serialized;
+    return stringify ? JSON.stringify(serialized) : serialized;
   }
 
   validationMessage(success, status, message = [], meta = null) {
@@ -43,12 +40,12 @@ class BaseAction {
       success,
       status,
       messages: Array.isArray(message) ? message : [message],
-      meta
-    }
+      meta,
+    };
   }
 
   static deserialize() {
-    throw new NotImplementedError(this.getType(), `deserialize`);
+    throw new NotImplementedError(this.getType(), 'deserialize');
   }
 }
 

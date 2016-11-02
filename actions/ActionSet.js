@@ -3,23 +3,26 @@ const Actions = require('./index');
 class ActionSet {
   constructor(type, parse) {
     this.actions = new Set();
-    
-    if(!parse)
+
+    if (!parse) {
       this.type = type;
-    else
+    } else {
       this.deserialize(type);
+    }
   }
 
-  add(value) { return this.actions.add(value); }
-  
-  serialize(transform, spacer) { 
+  add(value) {
+    return this.actions.add(value);
+  }
+
+  serialize(transform, spacer) {
     return JSON.stringify({
-        type: this.type,
-        actions: [...this.actions].map(action => action.serialize(false)),
-      },
+      type: this.type,
+      actions: [...this.actions].map(action => action.serialize(false)),
+    },
       transform,
       spacer
-    ); 
+    );
   }
 
   deserialize(data) {
@@ -27,23 +30,28 @@ class ActionSet {
     this.type = expanded.type;
 
     expanded.actions
-      .map(action => {
-        let actionType = Object.keys(Actions).filter(key => Actions[key].name === action.type );
+      .map((action) => {
+        let actionType = Object.keys(Actions).filter(key => Actions[key].name === action.type);
 
-        if(actionType.length)
+        if (actionType.length) {
           actionType = actionType[0];
-        else
+        } else {
           return null;
-        
+        }
+
         return (Actions[actionType]).deserialize(action.data);
       })
       .forEach(action => this.add(action));
   }
 
   run(collection) {
-    this.actions.forEach(action => collection = action.run(collection));
+    let results = collection.slice(0);
 
-    return collection;
+    this.actions.forEach((action) => {
+      results = action.run(results);
+    });
+
+    return results;
   }
 }
 

@@ -1,4 +1,4 @@
-const BaseAction = require('./baseAction');
+const BaseAction = require('./BaseAction');
 
 class PostAction extends BaseAction {
   constructor(body) {
@@ -7,18 +7,18 @@ class PostAction extends BaseAction {
   }
 
   validate() {
-    
-    if(this.data.body === undefined || this.data.body === null)
-      return this.validationMessage(false, 400, `Request body is missing`);
+    if (this.data.body === undefined || this.data.body === null) {
+      return this.validationMessage(false, 400, 'Request body is missing');
+    }
 
-    if(this.constructor.required_properties) {
-      const missing_props = this.constructor.required_properties
-        .filter(prop => !this.data.body.hasOwnProperty(prop))
+    if (this.constructor.required_properties) {
+      const missingProps = this.constructor.required_properties
+        .filter(prop => !this.data.body.hasOwnProperty(prop));
 
-      if(missing_props.length) {
-        return this.validationMessage(false, 400, `The following required fields are missing: ${missing_props.join(', ')}`, {
-          type: `missing_fields`,
-          data: missing_props 
+      if (missingProps.length) {
+        return this.validationMessage(false, 400, `The following required fields are missing: ${missingProps.join(', ')}`, {
+          type: 'missing_fields',
+          data: missingProps,
         });
       }
     }
@@ -28,17 +28,19 @@ class PostAction extends BaseAction {
 
   run(collection) {
     const validation = this.validate(collection);
-    if(!validation.success) 
-      throw new Error(validation.messages)
-    
-    const new_item = Object.assign({}, this.data.body, {id: this.ActionHelper.getNextId(collection)}); 
-    const new_collection = [...collection, new_item];
-    new_collection.deleted = collection.deleted;
-    return new_collection;
+    if (!validation.success) {
+      throw new Error(validation.messages);
+    }
+
+    const id = this.ActionHelper.getNextId(collection);
+    const newItem = Object.assign({}, this.data.body, { id });
+    const newCollection = [...collection, newItem];
+    newCollection.deleted = collection.deleted;
+    return newCollection;
   }
 
   static deserialize(data) {
     return new PostAction(data.body);
   }
 }
-module.exports = PostAction; 
+module.exports = PostAction;

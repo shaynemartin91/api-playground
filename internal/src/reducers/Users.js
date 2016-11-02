@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import * as ActionTypes from '../constants/ActionTypes.js';
 
 const initialState = [];

@@ -6,19 +6,22 @@ class ActionHelper {
 
   static getNextId(collection) {
     const sorted = collection.sort((a, b) => {
-      if(a.id < b.id)
+      if (a.id < b.id) {
         return -1;
-      if(a.id > b.id)
+      }
+
+      if (a.id > b.id) {
         return 1;
-      
+      }
+
       return 0;
     });
 
-    return sorted[sorted.length -1].id + 1;
+    return sorted[sorted.length - 1].id + 1;
   }
 
   static prep(collection) {
-    return collection.filter(d => !Action.isDeleted(collection, d.id));
+    return collection.filter(d => !ActionHelper.isDeleted(collection, d.id));
   }
 
   static existsInCollection(collection, id) {
@@ -26,16 +29,19 @@ class ActionHelper {
   }
 
   static deleteFromCollection(collection, id) {
-    if(!Array.isArray(collection.deleted))
-      collection.deleted = [];
+    const results = collection.slice(0);
 
-    collection.deleted.push(id);
+    if (!Array.isArray(collection.deleted)) {
+      results.deleted = [];
+    }
 
-    return collection;
+    results.deleted.push(id);
+
+    return results;
   }
 
   static isDeleted(collection, id) {
-    return Array.isArray(collection.deleted) && collection.deleted.indexOf(id) > -1
+    return Array.isArray(collection.deleted) && collection.deleted.indexOf(id) > -1;
   }
 }
 

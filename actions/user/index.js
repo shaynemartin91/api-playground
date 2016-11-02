@@ -5,5 +5,5 @@ const UserDeleteAction = require('./DeleteAction');
 module.exports = {
   UserPostAction,
   UserEditAction,
-  UserDeleteAction
+  UserDeleteAction,
 };

@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const BaseAction = require('./baseAction');
+const BaseAction = require('./BaseAction');
 
 class EditAction extends BaseAction {
   constructor(body) {
@@ -8,25 +8,27 @@ class EditAction extends BaseAction {
   }
 
   validate(collection) {
-    if(this.data.body === undefined || this.data.body === null)
-      return this.validationMessage(false, 400, `Request body is missing`);
+    if (this.data.body === undefined || this.data.body === null) {
+      return this.validationMessage(false, 400, 'Request body is missing');
+    }
 
-    if(this.constructor.required_properties) {
-      const missing_props = this.constructor.required_properties
-        .filter(prop => !this.data.body.hasOwnProperty(prop))
+    if (this.constructor.required_properties) {
+      const missingProps = this.constructor.required_properties
+        .filter(prop => !this.data.body.hasOwnProperty(prop));
 
-      if(missing_props.length) {
-        return this.validationMessage(false, 400, `The following required fields are missing: ${missing_props.join(', ')}`, {
-          type: `missing_fields`,
-          data: missing_props 
+      if (missingProps.length) {
+        return this.validationMessage(false, 400, `The following required fields are missing: ${missingProps.join(', ')}`, {
+          type: 'missing_fields',
+          data: missingProps,
         });
       }
     }
 
-    const record = _.findWhere(collection, {id: this.data.body.id}); 
+    const record = _.findWhere(collection, { id: this.data.body.id });
 
-    if(record === undefined || record.deleted)
+    if (record === undefined || record.deleted) {
       return this.validationMessage(false, 404, 'This record does not exist');
+    }
 
     return this.validationMessage(true);
   }
@@ -34,16 +36,18 @@ class EditAction extends BaseAction {
   run(collection) {
     const validation = this.validate(collection);
 
-    if(!validation.success) 
+    if (!validation.success) {
       throw new TypeError('Item does not pass validation');
+    }
 
-    const item = _.findWhere(collection, {id: this.data.body.id});
-    const updated_item = Object.assign({}, item, this.data.body);
-    const idx = _.findIndex(collection, r => r.id === item.id);
-    
-    collection[idx] = updated_item;
+    const item = _.findWhere(collection, { id: this.data.body.id });
+    const updatedItem = Object.assign({}, item, this.data.body);
+    const index = _.findIndex(collection, r => r.id === item.id);
 
-    return collection;
+    return collection
+      .slice(0, index)
+      .concat([updatedItem])
+      .concat(collection.slice(index + 1));
   }
 
   static deserialize(data) {
@@ -51,4 +55,4 @@ class EditAction extends BaseAction {
   }
 }
 
-module.exports = EditAction; 
+module.exports = EditAction;
